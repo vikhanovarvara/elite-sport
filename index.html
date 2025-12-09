@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>ELITE SPORTS — приватные модульные залы</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    * { box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+    body { background: radial-gradient(circle at top,#0b1f3b 0,#020617 55%,#020617 100%); color:#e5e7eb;}
+    .page { max-width:1120px;margin:0 auto;padding:32px 16px 40px;}
+    header { display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+    .logo { font-weight:800;letter-spacing:0.18em;font-size:20px;color:#facc6b;}
+    .tagline { font-size:13px;color:#9ca3af;max-width:280px;text-align:right;}
+
+    .hero { background: linear-gradient(135deg,rgba(15,118,210,0.16),rgba(8,47,73,0.88)); border-radius:22px;padding:26px 24px 26px;border:1px solid rgba(191,219,254,0.35);box-shadow:0 22px 60px rgba(15,23,42,0.8);margin-bottom:24px;position:relative;overflow:hidden;}
+    .hero::after { content:"";position:absolute;right:-40px;top:-40px;width:220px;height:220px;border-radius:999px;border:1px solid rgba(248,250,252,0.12);background:radial-gradient(circle at 30% 30%,rgba(248,250,252,0.16),transparent 60%);}
+    .hero-title { font-size:28px;margin-bottom:10px;color:#f9fafb;}
+    .hero-subtitle { font-size:14px;color:#e5e7eb;line-height:1.7;margin-bottom:14px;max-width:600px;}
+    .hero-highlight { font-size:15px;color:#feecc7;font-weight:600;margin-bottom:10px;}
+    .hero-badges { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+    .badge { font-size:11px;padding:5px 9px;border-radius:999px;background:rgba(15,23,42,0.85);color:#fefce8;border:1px solid rgba(250,204,21,0.9);}
+    .hero-note { font-size:12px;color:#d1d5db;max-width:640px;}
+
+    .section-title { font-size:18px;margin-bottom:6px;color:#f9fafb;}
+    .section-subtitle { font-size:13px;color:#9ca3af;margin-bottom:16px;}
+
+    .plans { margin-bottom:24px;}
+    .plans-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+    .plan {
+      background:linear-gradient(135deg,rgba(15,23,42,0.96),rgba(15,23,42,0.98));
+      border-radius:20px;
+      padding:16px 16px 14px;
+      border:1px solid rgba(148,163,184,0.7);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      box-shadow:0 18px 40px rgba(15,23,42,0.9);
+      transition:box-shadow .15s ease,transform .15s ease,border-color .15s ease;
+      min-height: 230px;
+    }
+    .plan-inner {
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      flex:1;
+    }
+    .plan-footer {
+      margin-top:8px;
+    }
+
+    .plan.selected { border-color:#facc6b;box-shadow:0 24px 60px rgba(250,204,21,0.25);transform:translateY(-2px);}
+    .plan-header-row { display:flex;justify-content:space-between;align-items:center;gap:8px;}
+    .plan-name { font-weight:600;font-size:16px;color:#f9fafb;}
+    .plan-label { font-size:11px;padding:3px 8px;border-radius:999px;background:rgba(250,204,21,0.1);color:#fef9c3;border:1px solid #facc6b;}
+    .plan-duration { font-size:12px;color:#9ca3af;}
+    .plan-price { font-weight:700;font-size:18px;margin-top:4px;color:#facc6b;}
+    .plan-price-note { font-size:11px;color:#9ca3af;}
+    .plan-desc { font-size:13px;color:#e5e7eb;line-height:1.5;}
+    .plan-benefits { font-size:12px;color:#d1d5db;}
+    .plan button {
+      width:100%;
+      padding:9px 10px;
+      font-size:13px;
+      border-radius:999px;
+      border:none;
+      background:#facc6b;
+      color:#111827;
+      cursor:pointer;
+      transition:background .15s ease,transform .1s ease,box-shadow .15s ease;
+      box-shadow:0 10px 24px rgba(250,204,21,0.55);
+    }
+    .plan button:hover { background:#fbbf24;}
+    .plan button:active { transform:scale(0.97);box-shadow:0 6px 16px rgba(250,204,21,0.7);}
+
+    .layout-main { display:grid;grid-template-columns:minmax(0,1.15fr)minmax(0,0.95fr);gap:18px;align-items:flex-start;}
+
+    @media (max-width:900px){
+      .layout-main{grid-template-columns:1fr;}
+      header{flex-direction:column;align-items:flex-start;gap:6px;}
+      .tagline{text-align:left;max-width:100%;}
+    }
+
+    .card { background:rgba(15,23,42,0.96);border-radius:20px;padding:18px 16px 16px;border:1px solid rgba(148,163,184,0.7);box-shadow:0 18px 40px rgba(15,23,42,0.9);}
+
+    form { display:flex;flex-direction:column;gap:10px;}
+    label { font-size:13px;font-weight:500;margin-bottom:2px;color:#e5e7eb;}
+
+    input,select {
+      padding:8px 10px;
+      font-size:13px;
+      border-radius:10px;
+      border:1px solid rgba(148,163,184,0.9);
+      outline:none;
+      transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;
+      color:#f9fafb;
+      background:rgba(15,23,42,0.9);
+      width:100%;
+    }
+    input:focus,select:focus {
+      border-color:#facc6b;
+      box-shadow:0 0 0 1px rgba(250,204,21,0.7);
+      background:rgba(15,23,42,0.6);
+    }
+    input[disabled]{
+      opacity:0.9;
+      color:#e5e7eb;
+      border-style:dashed;
+    }
+
+    .form-row { display:flex;gap:10px;align-items:flex-start;}
+    .form-row>div { flex:1;min-width:0;}
+
+    @media (max-width:520px){.form-row{flex-direction:column;}}
+
+    .primary-btn,.secondary-btn {
+      padding:10px 14px;
+      border-radius:999px;
+      border:none;
+      font-size:14px;
+      cursor:pointer;
+      margin-top:4px;
+      transition:background .15s ease,transform .1s ease,box-shadow .15s ease,color .15s ease;
+      width:100%;
+    }
+    .primary-btn {
+      background:linear-gradient(135deg,#38bdf8,#2563eb);
+      color:#0f172a;
+      box-shadow:0 16px 36px rgba(37,99,235,0.6);
+    }
+    .primary-btn:hover { background:linear-gradient(135deg,#0ea5e9,#1d4ed8);}
+    .primary-btn:active,.secondary-btn:active { transform:scale(0.97);box-shadow:0 8px 20px rgba(15,23,42,0.9);}
+    .secondary-btn {
+      background:#facc6b;
+      color:#111827;
+      box-shadow:0 12px 30px rgba(250,204,21,0.7);
+    }
+    .secondary-btn:hover { background:#fbbf24;}
+
+    .small-note { font-size:11px;color:#9ca3af;margin-top:4px;line-height:1.5;}
+    .summary { margin-top:10px;padding:10px;border-radius:12px;background:rgba(15,23,42,0.9);font-size:13px;color:#e5e7eb;border:1px solid rgba(191,219,254,0.6);}
+    .status { margin-top:10px;font-size:13px;padding:8px 10px;border-radius:10px;background:rgba(22,163,74,0.15);color:#bbf7d0;display:none;border:1px solid rgba(34,197,94,0.8);}
+    .status.error { background:rgba(248,113,113,0.12);color:#fecaca;border-color:rgba(248,113,113,0.9);}
+
+    footer { margin-top:26px;font-size:11px;color:#6b7280;text-align:center;line-height:1.5;}
+  </style>
+
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="logo">ELITE SPORTS</div>
+      <div class="tagline">
+        Приватные модульные залы в Санкт-Петербурге. Один клиент в зале, всё оборудование — только для вас.
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1 class="hero-title">Личный спортивный зал без посторонних глаз</h1>
+      <p class="hero-subtitle">
+        ELITE SPORTS — это модульные залы, которые бронируются только под вас. Никаких очередей, шума и
+        случайных свидетелей вашего утреннего лица. Вы тренируетесь один или приходите с личным тренером,
+        а пространство работает под ваш график.
+      </p>
+      <p class="hero-highlight">
+        Выбираете время в приложении, приезжаете к началу часа — зал полностью ваш.
+      </p>
+      <div class="hero-badges">
+        <span class="badge">1 клиент в зале</span>
+        <span class="badge">Слот по 60 минут</span>
+        <span class="badge">Санкт-Петербург</span>
+        <span class="badge">Можно с персональным тренером</span>
+      </div>
+      <p class="hero-note">
+        Формат для тех, кто ценит комфорт, приватность и не готов тратить время на переполненные залы. Доступно несколько форматов
+        абонементов: от пробного визита до годовой подписки с выгодной ценой за час.
+      </p>
+    </section>
+
+    <section class="layout-main">
+      <section class="plans">
+        <h2 class="section-title">Тарифы ELITE SPORTS</h2>
+        <p class="section-subtitle">
+          Выберите формат, который подходит вашему графику: пробная тренировка, месяц на регулярный режим или
+          долгосрочный абонемент с фиксированной ценой за каждое посещение.
+        </p>
+
+        <div class="plans-grid" id="plansList">
+          <article class="plan" data-plan-id="trial" data-plan-name="Пробное посещение" data-plan-price="550">
+            <div class="plan-inner">
+              <div class="plan-header-row">
+                <div>
+                  <div class="plan-name">Пробное посещение</div>
+                  <div class="plan-duration">1 посещение · 60 минут</div>
+                </div>
+                <span class="plan-label">Знакомство с залом</span>
+              </div>
+              <div>
+                <div class="plan-price">550 ₽</div>
+                <p class="plan-desc">
+                  Один час в приватном модульном зале, чтобы почувствовать формат ELITE SPORTS: тишина, чистота
+                  и всё оборудование только под вашу тренировку.
+                </p>
+                <p class="plan-benefits">
+                  • Идеально, чтобы протестировать зал и график<br />
+                  • Можно прийти с тренером<br />
+                  • Бронирование времени через приложение
+                </p>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <button type="button">Выбрать пробное посещение</button>
+            </div>
+          </article>
+
+          <article class="plan" data-plan-id="month" data-plan-name="Месячный абонемент" data-plan-price="9600">
+            <div class="plan-inner">
+              <div class="plan-header-row">
+                <div>
+                  <div class="plan-name">Месячный абонемент</div>
+                  <div class="plan-duration">12 посещений · 1 месяц</div>
+                </div>
+                <span class="plan-label">800 ₽ за посещение</span>
+              </div>
+              <div>
+                <div class="plan-price">9 600 ₽</div>
+                <div class="plan-price-note">12 индивидуальных тренировок в течение месяца</div>
+                <p class="plan-desc">
+                  Формат для тех, кто стабильно тренируется 2–3 раза в неделю и хочет зафиксировать личное
+                  пространство для спорта без очередей и лишних людей.
+                </p>
+                <p class="plan-benefits">
+                  • 12 слотов по 60 минут<br />
+                  • Свободный выбор времени через приложение<br />
+                  • Можно делиться слотами с одним тренером
+                </p>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <button type="button">Выбрать месячный абонемент</button>
+            </div>
+          </article>
+
+          <article class="plan" data-plan-id="halfyear" data-plan-name="Полугодовой абонемент" data-plan-price="50400">
+            <div class="plan-inner">
+              <div class="plan-header-row">
+                <div>
+                  <div class="plan-name">Полугодовой абонемент</div>
+                  <div class="plan-duration">72 посещения · 6 месяцев</div>
+                </div>
+                <span class="plan-label">700 ₽ за посещение</span>
+              </div>
+              <div>
+                <div class="plan-price">50 400 ₽</div>
+                <div class="plan-price-note">Экономия по сравнению с помесячной оплатой</div>
+                <p class="plan-desc">
+                  Решение для тех, кто планирует тренировки заранее и держит спорт в расписании на полгода.
+                  Цена за каждое посещение ниже, при этом сохраняется полный контроль над временем.
+                </p>
+                <p class="plan-benefits">
+                  • 72 индивидуальных слота по 60 минут<br />
+                  • Свободный выбор времени через приложение<br />
+                  • Формат для работы с персональным тренером
+                </p>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <button type="button">Выбрать полугодовой абонемент</button>
+            </div>
+          </article>
+
+          <article class="plan" data-plan-id="year" data-plan-name="Годовой абонемент" data-plan-price="93600">
+            <div class="plan-inner">
+              <div class="plan-header-row">
+                <div>
+                  <div class="plan-name">Годовой абонемент</div>
+                  <div class="plan-duration">144 посещения · 12 месяцев</div>
+                </div>
+                <span class="plan-label">650 ₽ за посещение</span>
+              </div>
+              <div>
+                <div class="plan-price">93 600 ₽</div>
+                <div class="plan-price-note">Максимальная выгода при регулярных тренировках</div>
+                <p class="plan-desc">
+                  Формат для тех, кто воспринимает спорт как базовую часть образа жизни. Зал готов к вашей
+                  тренировке в любое выбранное время, а стоимость часа остаётся комфортной.
+                </p>
+                <p class="plan-benefits">
+                  • 144 персональных слота по 60 минут<br />
+                  • Планирование графика на месяцы вперёд<br />
+                  • Формат для стабильного прогресса в течение года
+                </p>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <button type="button">Выбрать годовой абонемент</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">Забронировать зал онлайн</h2>
+        <p class="section-subtitle">
+          Выберите тариф, удобный день и время. После подтверждения оплата и доступ к модульному залу будут
+          привязаны к указанному email.
+        </p>
+
+        <form id="bookingForm">
+          <div>
+            <label for="name">Имя</label>
+            <input id="name" type="text" placeholder="Например, Иван" required />
+          </div>
+
+          <div>
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="name@example.com" required />
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label for="planSelect">Тариф</label>
+              <select id="planSelect" required>
+                <option value="">Выберите тариф</option>
+                <option value="trial">Пробное посещение — 550 ₽</option>
+                <option value="month">Месячный абонемент — 9 600 ₽</option>
+                <option value="halfyear">Полугодовой абонемент — 50 400 ₽</option>
+                <option value="year">Годовой абонемент — 93 600 ₽</option>
+              </select>
+            </div>
+            <div>
+              <label>Город</label>
+              <input type="text" value="Санкт-Петербург" disabled />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label for="visitDate">Дата</label>
+              <input id="visitDate" type="date" required />
+            </div>
+            <div>
+              <label for="visitTime">Время</label>
+              <input id="visitTime" type="time" required />
+            </div>
+          </div>
+
+          <button type="submit" class="primary-btn">Сформировать бронь</button>
+          <button type="button" id="payButton" class="secondary-btn" style="display:none;">
+            Оплатить и подтвердить
+          </button>
+          <p class="small-note">
+            В одном часовом слоте находится только один клиент. Если вы тренируетесь с персональным тренером,
+            он может сопровождать вас в рамках выбранного времени.
+          </p>
+
+          <div id="summary" class="summary" style="display:none;"></div>
+          <div id="status" class="status"></div>
+        </form>
+      </section>
+    </section>
+
+    <footer>
+      ELITE SPORTS · модульные приватные залы · Санкт-Петербург.
+    </footer>
+  </div>
+
+  <script>
+    const plans = document.querySelectorAll(".plan");
+    const planSelect = document.getElementById("planSelect");
+
+    plans.forEach((plan) => {
+      const button = plan.querySelector("button");
+      button.addEventListener("click", () => {
+        plans.forEach((p) => p.classList.remove("selected"));
+        plan.classList.add("selected");
+
+        const id = plan.dataset.planId;
+        planSelect.value = id;
+      });
+    });
+
+    const bookingForm = document.getElementById("bookingForm");
+    const summary = document.getElementById("summary");
+    const payButton = document.getElementById("payButton");
+    const statusBox = document.getElementById("status");
+
+    function getPlanInfo(planId) {
+      const plan = document.querySelector(`.plan[data-plan-id="${planId}"]`);
+      if (!plan) return null;
+      return {
+        name: plan.dataset.planName,
+        price: plan.dataset.planPrice,
+      };
+    }
+
+    bookingForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      statusBox.style.display = "none";
+      statusBox.classList.remove("error");
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const planId = document.getElementById("planSelect").value;
+      const date = document.getElementById("visitDate").value;
+      const time = document.getElementById("visitTime").value;
+
+      if (!name || !email || !planId || !date || !time) {
+        statusBox.textContent = "Пожалуйста, заполните все обязательные поля.";
+        statusBox.classList.add("error");
+        statusBox.style.display = "block";
+        return;
+      }
+
+      const planInfo = getPlanInfo(planId);
+      if (!planInfo) {
+        statusBox.textContent = "Выберите корректный тариф.";
+        statusBox.classList.add("error");
+        statusBox.style.display = "block";
+        return;
+      }
+
+      summary.style.display = "block";
+      summary.innerHTML = `
+        <strong>ELITE SPORTS · Бронь</strong><br /><br />
+        Имя: <strong>${name}</strong><br />
+        Email: <strong>${email}</strong><br />
+        Тариф: <strong>${planInfo.name}</strong> (${planInfo.price ? planInfo.price + " ₽" : ""})<br />
+        Город: <strong>Санкт-Петербург</strong><br />
+        Дата визита: <strong>${date}</strong><br />
+        Время визита: <strong>${time}</strong><br /><br />
+        Нажмите «Оплатить и подтвердить», чтобы завершить бронирование.
+      `;
+
+      payButton.style.display = "inline-block";
+    });
+
+    payButton.addEventListener("click", function () {
+      statusBox.classList.remove("error");
+      statusBox.textContent =
+        "Оплата успешно проведена. Бронь зафиксирована, модульный зал будет ждать вас в указанное время.";
+      statusBox.style.display = "block";
+    });
+  </script>
+
+</body>
+</html>
